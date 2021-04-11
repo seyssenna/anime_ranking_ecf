@@ -17,21 +17,21 @@ class TopController extends Controller
         // | c'est pour moi la requete la plus dur du projet.                                                       |
         // |                                                    |                                                   |
         // |                                                    V                                                   |
-        // |  $animes = DB::select('SELECT ROUND(AVG(rating), 1) AS moyenne, id, title, animes.description, cover   |
-        // |                      FROM reviews                                                                      |
-        // |                      JOIN animes ON fk_anime_id = animes.id                                            |
-        // |                      GROUP BY fk_anime_id                                                              |
-        // |                      ORDER BY moyenne DESC');                                                          |
+          $animes = DB::select('SELECT ROUND(AVG(rating), 1) AS moyenne, id, title, animes.description, cover   
+                              FROM reviews                                                                      
+                              JOIN animes ON fk_anime_id = animes.id                                            
+                              GROUP BY fk_anime_id                                                              
+                              ORDER BY moyenne DESC');                                                          
         //  --------------------------------------------------------------------------------------------------------
 
-         
-        $animes = Review::join('animes', 'fk_anime_id', '=', 'animes.id')
-        // ici on sélectionne la colonne "rating" dans la table "reviews" et on fait la moyenne des notes
-        // DB::raw permet l'ajout de chaine de caractere(round, avg, as...) dans la requete eloquent 
-        ->select('title',DB::raw("ROUND(AVG(rating),1) AS moyenne"), 'description', 'cover', 'fk_anime_id')
-        ->groupBy('fk_anime_id')
-        ->orderBy('moyenne', 'desc')
-        ->get();
+       
+        // $animes = Review::join('animes', 'fk_anime_id', '=', 'animes.id')
+        // // ici on sélectionne la colonne "rating" dans la table "reviews" et on fait la moyenne des notes
+        // // DB::raw permet l'ajout de chaine de caractere(round, avg, as...) dans la requete eloquent 
+        // ->select('title',DB::raw("ROUND(AVG(rating),1) AS moyenne"), 'description', 'cover', 'fk_anime_id')
+        // ->groupBy('fk_anime_id')
+        // ->orderBy('moyenne', 'desc')
+        // ->get();
 
         // conteur pour classement du top
         $i = 1;
