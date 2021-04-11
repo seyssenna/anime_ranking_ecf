@@ -24,16 +24,21 @@ class ReviewController extends Controller
     // fonction qui gere l'ajout d'une review
     public function addReview(Request $request)
     {
-        $validatedData = $request->validate(["rate"     => "required",
-                                             "comment"  => "required",
-                                             "anime_id" => "required",
-                                             "user_id"  => "required"]);
-        $review = new Review();
-        $review->rating      = $validatedData["rate"];
-        $review->comment     = $validatedData["comment"];
-        $review->fk_user_id  = $validatedData["user_id"];
-        $review->fk_anime_id = $validatedData["anime_id"];
-        $review->save();
+        
+        $alreadyCommented = $this->AlreadyCommented($request['anime_id']);
+
+        if ($alreadyCommented === 0) {
+            $validatedData = $request->validate(["rate"     => "required",
+                                                "comment"  => "required",
+                                                "anime_id" => "required",
+                                                "user_id"  => "required"]);
+            $review = new Review();
+            $review->rating      = $validatedData["rate"];
+            $review->comment     = $validatedData["comment"];
+            $review->fk_user_id  = $validatedData["user_id"];
+            $review->fk_anime_id = $validatedData["anime_id"];
+            $review->save();
+        }
 
         return redirect()->route('getAnime', [$validatedData["anime_id"]]);
     }
