@@ -13,7 +13,7 @@ class WatchlistController extends Controller
         $animes = Watchlist::join('animes', 'fk_anime_id', '=', 'animes.id')
                            ->where('fk_user_id', '=', Auth::id())
                            ->get();
-        // dd($animes);
+        
         return view('watchlist', ['animes' => $animes]);
     }
 
