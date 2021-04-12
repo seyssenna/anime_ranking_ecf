@@ -29,7 +29,7 @@ class TopController extends Controller
         // ici on sélectionne la colonne "rating" dans la table "reviews" et on fait la moyenne des notes
         // DB::raw permet l'ajout de chaine de caractere(round, avg, as...) dans la requete eloquent 
         ->select('title',DB::raw("ROUND(AVG(rating),1) AS moyenne"), 'description', 'cover', 'fk_anime_id')
-        ->groupBy('fk_anime_id', 'title')
+        ->groupBy('fk_anime_id', 'title', 'description', 'cover')
         ->orderBy('moyenne', 'desc')
         ->get();
 
