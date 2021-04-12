@@ -1,78 +1,48 @@
-# Pré-requis
+# ECF mathieu millet
 
-Pour pouvoir lancer le site, vous aurez besoin de:
+## anime ranking
 
--   PHP cli >= 7.3
--   un serveur MySQL
--   [composer](https://getcomposer.org/download/)
--   toutes les [extensions PHP](https://laravel.com/docs/8.x/deployment#server-requirements) nécessaires au bon fonctionnement de Laravel
+j'ai pu faire tout ce qui etait demandé. 
+j'ai commencé par reorganiser le code fourni et departager tout ca dans des controllers et des models.
+j'ai ensuite passé un peu de temps sur la creation des autres tables et bien evidement, les ```foreign key``` m'ont posé quelques problemes, 
+jusqu'a ce que je decide de jetter un oeil aux fameuses migrations evoqué dans le brief en lisant la doc... 
+10 minutes plus tard j'avais mes tables toutes belles et bien faites. 
+je met un pouce en l'air a la doc de laravel! tres bien faite je trouve (exemple moyen parfois).
+j'ai esuite debuté le travail.
 
-# Installation
+j'ai logiquement travaillé sur les users stories dans l'ordre en fonction de leurs importances.
+ce n'etait pas precisé donc j'ai fait le choix de rendre obligatoire l'ajout d'une note en meme temps que l'ajout d'une review.
+j'ai donc travaillé sur ces deux users stories en meme temps.
+j'ai ensuite travaillé les autres users stories etc...
+je n'ai pas réelement eu de difficultés en general(je n'ai pas dit que c'etait facile non plus). 
+les moments de blocage etait vite reglé en lisant un peu la doc.
 
-## Installation des dépendances
+sauf pour la requete pour recuperer les animes en fonction de leurs moyennes pour la page top. 
+j'y ai passé pas mal de temps sans reussir a faire la requete (j'avais surement plus les yeux en face des trous)
+frustré, je decide de demander de l'aide... Thierry, sachant que je ne copierais pas betement, me montre son code que j'ai pas vraiment compris, 
+mais ma foi, ca marche.
+pas satisfait du tout de pas avoir trouvé moi meme, je decide de continuer me recherches. 
+pour me remetre les idées a zero, je dessine sur un bout de papier la table que je souhaite recuperer. de la, j'arrive a une requete potable en SQL pure.
+et de fil en eguille, a une requete en eloquent. a peu de chose pres, la meme que Thierry. mais au moins la, je la comprend a 100%.
+le ```DB::raw()``` m'a donné beaucoup de mal, j'avoue que si je ne l'avais pas vu sur le code de Thierry j'aurais pu passer encore pas mal d'heures a trouver.
+il m'as juste fallu lire la doc et un peu de stackOverflow pour le comprendre.
+j'ai laissé les deux requetes SQL et Eloquent avec quelques commentaires dans le ```topController.php```
 
-Pour installer les dépendances du projet, vous devrez utiliser composer :
+- il etait demander d'envoyer sur le formulaire de login quand un utilisateur pas connecté clique sur "watchlist", 
+  j'ai a la place decider de ne pas le rendre visible (traitement dans la vue). 
+  je me rend compte a l'heure ou je redige ce document (le 11 au soir) que j'aurais en fait juste du suivre ce qui etait demander.
 
-```
-composer install
-```
+- si un utilisateur connecté clique sur "ajouter une critique" sur un anime ou il a deja ajouté une critique, je le redirige sur une page d'erreur
+  qui lui permet de modifier ca precedente critique s'il le souhaite.
+  
+- quand un utilisateur connecté clique sur le bouton "ajouter a ma watchlist" cela l'ajoute correctement 
+  et le bouton se transforme en "retirer de ma watchlist" (traitement dans la vue).   
 
-## Création de la base de données
 
-Pour faire tourner le projet, vous devrez créer une nouvelle base de données sur
-votre serveur MySQL (avec PhpMyAdmin ou bien en ligne de commande).
+je suis allé au plus simple pour ce projet. zero Js et tres tres peu de css...
+au niveau des bonus je n'ai pu faire que la modification d'une critiques et la full utilisation d'eloquent.
+j'ai trouver ce projet assez lourd, j'ai du coup pas été motivé pour les autres bonus.
 
-## Configuration de la base de données
+je tiens a preciser que j'ai tres bien compris le MVC et chaque ligne de code que j'ai ajouter, rien n'a ete mysterieux ou du moins, ne l'est plus.
+j'ai aussi bien aimé l'utilisation de laravel et sa doc.
 
-Une fois les dépendances installées, vous devrez copier le fichier
-`.env.example` en `/env`
-
-```
-cp .env.example .env
-```
-
-Vous devrez ensuite modifier les informations de connexion à la base de données
-contenues dans ce fichier, en fonction du nom que vous aurez donné à votre base
-de donnée, et de votre environnement (port, username, mot de passe)
-
-```
-DB_PORT=???
-DB_DATABASE=???
-DB_USERNAME=???
-DB_PASSWORD=???
-```
-
-### Migrations
-
-Une fois vos informations de connexion renseignées, vous devrez créer toutes les
-tables du projet. Pour faciliter cette tâche, Laravel utilise un système de
-[migrations](https://laravel.com/docs/8.x/migrations) qui automatisent ce
-processus.
-
-Pour lancer les migrations, exécutez la commande suivante :
-
-```
-php artisan migrate
-```
-
-### Seeds
-
-Pour pré-remplir la BDD avec des données prédéfinies, le projet utilise les
-[seeds](https://laravel.com/docs/8.x/seeding) de Laravel. Pour exécuter les
-"seeds", lancez la commande suivante :
-
-```
-php artisan db:seed
-```
-
-## Génération de la clé de chiffrement
-
-Vous pouvez maintenant lancer le serveur de développement en ligne de commande
-
-```
-php artisan serve
-```
-
-Lorsque vos accéderez au site, vous verrez une erreur Laravel, avec un bouton
-qui vous suggère de créer une clé. Cliquez sur ce bouton pour générer la clé,
-puis relancer votre serveur de développement.
