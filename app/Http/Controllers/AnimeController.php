@@ -19,31 +19,24 @@ class AnimeController extends Controller
         return view('welcome', ["animes" => $animes]);
     }
 
-    // fonction qui retourne la moyenne d'un tableau
-    public function getAvg(array $tab)
-    {
-        $somme = 0;
-        $i = 0;
-        foreach($tab as $valeur)
-        {
-        $i++; // On incrémente la variable qui nous dit combien de tour on fait
-        $somme+=$valeur;
-        // équivaut a $somme = $somme + $valeur
-        }
-        $moyenne = $somme / $i;
-        return $moyenne;
-    }
 
-
-    // affiche un anime 
+    // affiche un anime dans sa page
     public function showAnime($id)
     {
+    // j'ai tenté de faire une jointure sur 3 tables mais je n'arrivais pas
+    // a afficher les animes sans review. je suis donc parti sur plusieurs requetes
+    // 
+    // $reviews = Review::join('animes', 'fk_anime_id', '=', 'animes.id')
+    //                  ->join('users', 'fk_user_id', '=', 'users.id')
+    //                  ->where('fk_anime_id', '=', $id)
+    //                  ->get();
+
+
         //requete pour recuperer l'anime
         $anime = Anime::find($id);
         
         // requete pour recuperer les reviews
-        $reviews = Review::join('animes', 'fk_anime_id', '=', 'animes.id')
-                         ->join('users', 'fk_user_id', '=', 'users.id')
+        $reviews = Review::join('users', 'fk_user_id', '=', 'users.id')
                          ->where('fk_anime_id', '=', $id)
                          ->get();
 
@@ -53,12 +46,8 @@ class AnimeController extends Controller
         // calcule la moyenne des notes
         $moyenne = round($reviews->avg('rating'), 1);
 
-        // requete pour savoir si l'utilisateur connecté as déjà écrit une critique sur l'anime affiché
-        $query = Review::where('fk_user_id', '=', Auth::id())
-                                    ->where('fk_anime_id', '=', $id)
-                                    ->get();
-        // contient le nombre de critique de l'utilisateur connecté sur l'anime affiché
-        $alreadyCommented = count($query);
+        // fonction pour savoir si l'utilisateur courant a deja ecrit une review 
+        $alreadyCommented = ReviewController::AlreadyCommented($id);
 
         // requete pour verifier si un anime est deja(ou pas) dans la watchlist de l'utilisateur courant
         $query = Watchlist::where('fk_user_id', '=', Auth::id())
@@ -75,20 +64,14 @@ class AnimeController extends Controller
       'alreadyInWatchlist' => $alreadyInWatchlist]);
     }
 
-    // envoi sur la page d'ajout de review d'un anime
+    // envoi sur le formulaire d'ajout de review d'un anime
     public function getAnime($id) 
     {
         $anime = Anime::find($id);
 
-        //  // requete pour savoir si l'utilisateur connecté as déjà écrit une critique sur l'anime affiché
-        //  $query = Review::where('fk_user_id', '=', Auth::id())
-        //  ->where('fk_anime_id', '=', $id)
-        //  ->get();
-        //  // contient le nombre de critique de l'utilisateur connecté sur l'anime affiché
-        //  $alreadyCommented = count($query);
-         $alreadyCommented = ReviewController::AlreadyCommented($id);
+        // fonction pour savoir si l'utilisateur courant a deja ecrit une review 
+        $alreadyCommented = ReviewController::AlreadyCommented($id);
 
-        // dd($alreadyCommented);
         return view('new_review', ["anime" => $anime, 'alreadyCommented' => $alreadyCommented]);
     }
 }
